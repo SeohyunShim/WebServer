@@ -79,3 +79,56 @@ button {
 button:active {
   transform: scale(0.95);
 }
+
+@media screen and (max-width: 1408px){
+	div {
+		width: 1408px;
+		height: 96vh;
+	}
+}
+
+@media screen and (max-height: 896px){
+	div {
+		width: 100%;
+		height: 896px;
+	}
+}
+
+@media (max-width: 512px){
+	div {
+		width: 478px;
+		height: 98vh;
+	}
+	
+	div.left{
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	div.right {
+		display:none;
+	}
+}
+
+@media screen and (max-height: 896px) and (max-width: 1408px) and (min-width:512px){
+	div {
+		width: 1408px;
+		height: 896px;
+	}
+}
+
+@media screen and (max-height: 896px) and (max-width: 512px){
+	div {
+		width: 461px;
+		height: 896px;
+	}
+	
+	div.left{
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	div.right {
+		display:none;
+	}
+}
