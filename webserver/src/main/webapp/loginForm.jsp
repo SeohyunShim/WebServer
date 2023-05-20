@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="css/login.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="./javascript/login.js"></script>
+<link href="./css/login.css" rel="stylesheet" type="text/css">
+<script src="./javascript/login.js" type="text/javascript"></script>
 <meta charset="UTF-8">
 <title>Sign In</title>
 </head>
