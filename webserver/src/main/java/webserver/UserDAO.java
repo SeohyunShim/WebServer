@@ -30,13 +30,58 @@ public class UserDAO {
 	
 	public void insert(User user) {
 		open();
-		String sql="INSERT INTO employee(userID, userPW) values(?,?)";
+		String sql="INSERT INTO `user`(ID, PW, NAME, PHONE_NUM, HOURLY_WAGE, JOB, ADMIN, PERMISSION) values(?,?,?,?,?,?,?,?)";
 	
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, user.getUserID());
 			pstmt.setString(2, user.getUserPW());
+			pstmt.setString(3, user.getUserName());
+			pstmt.setString(4, user.getUserPhone());
+			pstmt.setInt(5, user.getUserWage());
+			pstmt.setString(6, user.getUserJob());
+			pstmt.setString(7, user.getUserAdmin());
+			pstmt.setString(8, user.getUserPermission());
 			
+			pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+	}
+	
+	public void delete(String ID) {
+		open();
+		String sql="DELETE FROM `user` WHERE ID = ?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, ID);
+			
+			pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+	}
+	
+	public void update(User user) {
+		open();
+		String sql="UPDATE `user` SET PW=?, NAME=?, PHONE_NUM=?, HOURLY_WAGE=?, JOB=?, ADMIN=?, PERMISSION=? WHERE ID=?";
+	
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, user.getUserPW());
+			pstmt.setString(2, user.getUserName());
+			pstmt.setString(3, user.getUserPhone());
+			pstmt.setInt(4, user.getUserWage());
+			pstmt.setString(5, user.getUserJob());
+			pstmt.setString(6, user.getUserAdmin());
+			pstmt.setString(7, user.getUserPermission());
+			pstmt.setString(8, user.getUserID());
+						
 			pstmt.executeUpdate();
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -50,13 +95,19 @@ public class UserDAO {
 		List<User> users = new ArrayList<>();
 		
 		try {
-			pstmt = conn.prepareStatement("select * from employee");
+			pstmt = conn.prepareStatement("select * from `user`");
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				User user = new User();
-				user.setUserID(rs.getString("userID"));
-				user.setUserPW(rs.getString("userPW"));
+				user.setUserID(rs.getString("ID"));
+				user.setUserPW(rs.getString("PW"));
+				user.setUserName(rs.getString("NAME"));
+				user.setUserPhone(rs.getString("PHONE_NUM"));
+				user.setUserWage(rs.getInt("HOURLY_WAGE"));
+				user.setUserJob(rs.getString("JOB"));
+				user.setUserAdmin(rs.getString("ADMIN"));
+				user.setUserPermission(rs.getString("PERMISSION"));
 				
 				users.add(user);
 			}
@@ -72,15 +123,21 @@ public class UserDAO {
 		open();
 		User user = new User();
 		try {
-			String sql = "select * from employee where userID = ?";
+			String sql = "select * from `user` where ID = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userID);
 			ResultSet rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				User u= new User();
-				u.setUserID(rs.getString("userID"));
-				u.setUserPW(rs.getString("userPW"));
+				u.setUserID(rs.getString("ID"));
+				u.setUserPW(rs.getString("PW"));
+				u.setUserName(rs.getString("NAME"));
+				u.setUserPhone(rs.getString("PHONE_NUM"));
+				u.setUserWage(rs.getInt("HOURLY_WAGE"));
+				u.setUserJob(rs.getString("JOB"));
+				u.setUserAdmin(rs.getString("ADMIN"));
+				u.setUserPermission(rs.getString("PERMISSION"));
 				
 				user=u;
 				}
@@ -96,18 +153,24 @@ public class UserDAO {
 		open();
 		User user = new User();
 		try {
-			String sql = "select * from employee where userID = ? and userPW = ?";
+			String sql = "select * from `user` where ID = ? and PW = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userID);
 			pstmt.setString(2, userPW);
 			ResultSet rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				User u= new User();
-				u.setUserID(rs.getString("userID"));
-				u.setUserPW(rs.getString("userPW"));
+				User u = new User();
+				u.setUserID(rs.getString("ID"));
+				u.setUserPW(rs.getString("PW"));
+				u.setUserName(rs.getString("NAME"));
+				u.setUserPhone(rs.getString("PHONE_NUM"));
+				u.setUserWage(rs.getInt("HOURLY_WAGE"));
+				u.setUserJob(rs.getString("JOB"));
+				u.setUserAdmin(rs.getString("ADMIN"));
+				u.setUserPermission(rs.getString("PERMISSION"));
 				
-				user=u;
+				user = u;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();

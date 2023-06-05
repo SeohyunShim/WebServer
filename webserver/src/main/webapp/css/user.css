@@ -1,0 +1,62 @@
+/* contents */
+#contents {
+    width: 100%;
+}
+#contents > div {
+    background-color: #fff;
+    float: left;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+    padding: 22px 30px;
+}
+
+.work-container,
+.end-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: calc(30% - 15px);
+    height: 130px;
+    margin-right: 15px;
+}
+:is(.work-container, .end-container, .salary-container) p {
+    font-size: 18px;
+    font-weight: bold;
+}
+:is(.work-container, .end-container) p span {
+    font-size: 14px;
+    margin-left: 10px;
+    color: #aaa;
+}
+:is(.work-container, .end-container) button {
+    width: 100%;
+    height: 50px;
+    background-color: #3e4fba;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+#goToWorkTime, #getOffWorkTime {
+    font-size: 28px;
+}
+
+.salary-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 40%;
+    height: 130px;
+}
+.salary-container div {
+    display: flex;
+    align-items: center;
+}
+.salary-container div img {
+    height: 40px;
+    margin-right: 10px;
+}
+.salary-container div span {
+    font-size: 34px;
+    font-weight: bold;
+}

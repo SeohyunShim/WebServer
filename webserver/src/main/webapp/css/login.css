@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+body {
+	width: unset;
+}
+
 h1 {
   font-weight: bold;
   font-size: 50px;
@@ -17,7 +21,7 @@ span {
 
 div {
 	width: 100%;
-	height: 98vh;
+	height: 100vh;
 }
 
 div.left {
@@ -33,6 +37,7 @@ div.right {
 	display: flex;
 	align-items: center;
     justify-content: center;
+    background-color: #f3f6f8;
 }
 
 form {
@@ -41,14 +46,14 @@ form {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0 50px;
+  padding: 0 80px;
   height: 100%;
 }
 
 img.left-top {
-	display: flex;
-    width: 60%;
-    margin-bottom: 30px;
+    display: flex;
+    width: 50%;
+    margin-bottom: 50px;
     align-items: center;
   	justify-content: center;
 }
@@ -58,7 +63,7 @@ input {
   border-bottom: 1px solid #676767;
   padding: 15px 15px;
   margin: 16px 0;
-  width: 80%;
+  width: 85%;
   color: #848484;
   font-size: 15px;
 }
@@ -131,4 +136,5 @@ button:active {
 	div.right {
 		display:none;
 	}
+}
 }

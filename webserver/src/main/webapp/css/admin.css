@@ -1,0 +1,303 @@
+.list-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.waiting-list-button {
+    width: 140px;
+    height: 50px;
+    background-color: #3e4fba;
+    color: white;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: right;
+    border-radius: 5px;
+}
+.waiting-list-button span {
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    margin-left: 5px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.list {
+    width: 100%;
+    /* overflow: hidden; */
+}
+.list-header {
+    width: 100%;
+    overflow: hidden;
+}
+.list-header > div {
+    height: 30px;
+    float: left;
+}
+
+.list-body li {
+    background: white;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+.list-info {
+    height: 75px;
+}
+.list-info > div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    float: left;
+}
+:is(.list-header > div, .list-info > div):nth-of-type(1) {
+    padding-left: 25px;
+    width: 10%;
+}
+:is(.list-header > div, .list-info > div):nth-of-type(2) {
+    width: 15%;
+}
+:is(.list-header > div, .list-info > div):nth-of-type(3) {
+    width: 23%;
+}
+:is(.list-header > div, .list-info > div):nth-of-type(4) {
+    width: 20%;
+}
+:is(.list-header > div, .list-info > div):nth-of-type(5) {
+    width: 15%;
+}
+:is(.list-header > div, .list-info > div):nth-of-type(6) {
+    width: 14%;
+    justify-content: flex-end;
+}
+:is(.list-header > div, .list-info > div):nth-of-type(7) {
+    width: 3%;
+    position: relative;
+}
+.list-info > div span {
+    font-weight: bold;
+}
+
+.list-image-user {
+    width: 38px;
+}
+.list-image-menu {
+    height: 25px;
+    cursor: pointer;
+}
+
+.popup-menu {
+    display: none;
+    width: 150px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    transform: translate(-15%, -50%);
+    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.popup-menu.show {
+    display: flex;
+}
+
+.menu-item {
+    background: none;
+    border: none;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.menu-item:nth-of-type(1) {
+    border-bottom: 1px solid #eee;
+}
+.menu-item:nth-of-type(2) {
+    color: red;
+}
+.menu-item:hover {
+    background-color: #f1f1f1;
+}
+
+.view-button {
+    width: 70px;
+    height: 30px;
+    background-color: #fff;
+    color: #3e4fba;
+    border: 1px solid #3e4fba;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 16px;
+    cursor: pointer;
+    float: right;
+    transition: 0.2s;
+}
+.view-button:hover {
+    background-color: #3e4fba;
+    color: white;
+}
+
+.list-table {
+    background: white;
+    border-radius: 5px;
+}
+
+.list-table {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s;
+}
+
+.list-table.show {
+    max-height: 1000px; /* 충분한 높이로 설정하여 콘텐츠가 모두 보이도록 합니다. */
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fefefe;
+    margin: 0 auto;
+    padding: 30px 30px 20px 30px;
+    border: 1px solid #888;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.modal-content h2 {
+    margin-bottom: 30px;
+}
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f3f6f89f;
+    border-radius: 5px;
+}
+.modal-content button {
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+.modal-content button:nth-of-type(1) {
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.modal-content button:nth-of-type(2) {
+    background-color: #1f1f1f;
+    color: #fff;
+}
+
+:is(#editEmployeePopup, #waitingListPopup) {
+    display: none;
+}
+
+#editEmployeePopup .modal-content {
+    max-width: 400px;
+}
+#waitingListPopup .modal-content {
+    width: 700px;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+#editEmployeePopup h2 {
+    margin-top: 0;
+}
+
+#editEmployeePopup input {
+    margin-bottom: 8px;
+}
+
+:is(#editEmployeePopup, #waitingListPopup) .form-button-wrap {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+:is(#editEmployeePopup, #waitingListPopup) .form-button-wrap button {
+    margin: 15px 5px 0 5px;
+}
+
+.waiting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+.waiting-item:last-of-type {
+    border-bottom: unset;
+}
+
+.waiting-info {
+    width: 400px;
+}
+
+.waiting-profile {
+    float: left;
+}
+
+.waiting-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.waiting-details {
+    float: left;
+    text-align: left;
+}
+
+.waiting-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.waiting-subtitle,
+.waiting-date {
+    font-size: 14px;
+    color: #888;
+}
+
+.waiting-actions {
+    width: calc(100% - 400px);
+    text-align: right;
+}
+
+.waiting-actions button {
+    margin-left: 10px;
+}
