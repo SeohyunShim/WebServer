@@ -88,6 +88,7 @@ button:active {
 @media screen and (max-width: 1408px){
 	div {
 		width: 1408px;
+		height: 96vh;
 	}
 }
 
@@ -135,4 +136,5 @@ button:active {
 	div.right {
 		display:none;
 	}
+}
 }
