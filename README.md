@@ -23,8 +23,9 @@
   6. jsp-servlet 연동
 
 
-### 4. DB구성 (사진)
-
+### 4. DB구성
+  
+  https://www.erdcloud.com/d/vBTPFXyTus2JGWys9
 
 ### 5. 기능
 
