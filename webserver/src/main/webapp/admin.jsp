@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.*"%>
 <%@ page import="java.text.*" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ page import="webserver.User" %>
 <%@ page import="webserver.UserDAO" %>
 <%@ page import="webserver.Work" %>
@@ -78,10 +79,13 @@ for(User e : users){
                     for(User e: employees){
                     	List<Work> works = workDao.getUserWork(e.getUserID());
                     	//이번달에 일한만큼 월급 계산
+                    	LocalDate now = LocalDate.now();
                     	int pay = 0;
                     	int workTimeSum = 0;
-                    	for(Work w: works){
-                    		workTimeSum += w.getWork_time();
+                    	for(Work w: works){ 
+                    		if(Objects.equals(w.getDate().getYear(), now.getYear()) && Objects.equals(w.getDate().getMonth(), now.getMonth())){
+                    			workTimeSum += w.getWork_time();
+                    		}
                     	}
                     	if(workTimeSum != 0){
                     		pay = workTimeSum/60*e.getUserWage();
