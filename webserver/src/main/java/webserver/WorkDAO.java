@@ -180,4 +180,38 @@ public class WorkDAO {
 		}
 		return works;
 	}
+	
+	public List<Work> getUserMonthWork(String userID, int year, int month) {
+	    open();
+	    List<Work> works = new ArrayList<>();
+
+	    try {
+	        pstmt = conn.prepareStatement("SELECT * FROM `work` WHERE user_id=? AND YEAR(date)=? AND MONTH(date)=?");
+	        pstmt.setString(1, userID);
+	        pstmt.setInt(2, year);
+	        pstmt.setInt(3, month);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            Work work = new Work();
+	            work.setIDX(rs.getInt("idx"));
+	            work.setDate(rs.getDate("date"));
+	            work.setUser_id(rs.getString("user_id"));
+	            if (rs.getTimestamp("start_time") != null) {
+	                work.setStart_time(rs.getTimestamp("start_time"));
+	            }
+	            if (rs.getTimestamp("end_time") != null) {
+	                work.setEnd_time(rs.getTimestamp("end_time"));
+	            }
+	            work.setWork_time(rs.getInt("work_time"));
+	            works.add(work);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        close();
+	    }
+	    return works;
+	}
+
 }

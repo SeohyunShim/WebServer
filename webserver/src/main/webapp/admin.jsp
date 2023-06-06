@@ -84,14 +84,15 @@ for(User e : users){
                     	int workTimeSum = 0;
                     	for(Work w: works){ 
                     		if(Objects.equals(w.getDate().getYear(), now.getYear()) && Objects.equals(w.getDate().getMonth(), now.getMonth())){
+                        		System.out.println(w.getWork_time());
                     			workTimeSum += w.getWork_time();
                     		}
                     	}
                     	if(workTimeSum != 0){
-                    		pay = workTimeSum/60*e.getUserWage();
+                    		pay = workTimeSum/60 * e.getUserWage();
                     	}
                     %>
-                    <li>
+                    <li id="list-item-<%= e.getUserID() %>">
                         <div class="list-info">
                             <div>
                                 <img
@@ -102,7 +103,7 @@ for(User e : users){
                             </div>
                             <div><%= e.getUserName() %></div>
                             <div><%= e.getUserPhone() %></div>
-                            <div><span><%= e.getUserWage() %></span>원</div>
+                            <div><span><%= formatter.format(e.getUserWage()) %></span>원</div>
                             <div><span><%= formatter.format(pay) %></span>원</div>
                             <div><button class="view-button">VIEW</button></div>
                             <div>
@@ -128,7 +129,7 @@ for(User e : users){
                         </div>
                         <div class="list-table">
                             <div class="calendar-container">
-                                <p>2023. 5.</p>
+                                <p></p>
                                 <div class="days">
                                     <div class="day">SUN</div>
                                     <div class="day">MON</div>
@@ -139,37 +140,6 @@ for(User e : users){
                                     <div class="day">SAT</div>
                                 </div>
                                 <div class="dates">
-                                    <div class="date">
-                                        1
-                                        <!--  <div class="time">09:00 - 14:00</div> -->
-                                    </div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
                                 </div>
                             </div>
                         </div>

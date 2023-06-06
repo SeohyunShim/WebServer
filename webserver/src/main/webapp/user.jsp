@@ -21,6 +21,9 @@
 </head>
     <body>
         <div id="wrap">
+        	<input type="hidden" id="user-id" value=<%= user.getUserID() %>>
+        	<input type="hidden" id="user-wage" value=<%= user.getUserWage() %>>
+        
             <header>
                 <div class="header-left">
                     <p><span><%= user.getUserJob() %></span> / <span><%= user.getUserName() %></span></p>
@@ -32,23 +35,27 @@
             </header>
 
             <div id="contents">
-                <div class="work-container">
-				    <p>출근<span class="today"><%= today %></span></p>
+				<div class="work-container">
+				    <p>출근<span class="today"><%= today.toString() %></span></p>
 				    <button id="goToWorkButton" class="work-button" onclick="postGoToWork()">출근하기</button>
-				    <div id="goToWorkTime" style="display: none;"></div>
+				    <div id="goToWorkTime" style="display: <%= (request.getAttribute("goToWorkTime") != null) ? "block" : "none" %>;">
+				        <%= request.getAttribute("goToWorkTime") %>
+				    </div>
 				</div>
 				
 				<div class="end-container">
-				    <p>퇴근<span class="today"><%= today %></span></p>
+				    <p>퇴근<span class="today"><%= today.toString() %></span></p>
 				    <button id="getOffWorkButton" class="end-button" onclick="postGetOffWork()">퇴근하기</button>
-				    <div id="getOffWorkTime" style="display: none;"></div>
+				    <div id="getOffWorkTime" style="display: <%= (request.getAttribute("getOffWorkTime") != null) ? "block" : "none" %>;">
+				        <%= request.getAttribute("getOffWorkTime") %>
+				    </div>
 				</div>
 
                 <div class="salary-container">
                     <p>이번 달 예상 급여</p>
                     <div>
                         <img src="resources/dollar.png" />
-                        <span>0 원</span>
+				        <span id="salaryAmount">0 원</span>
                     </div>
                 </div>
 

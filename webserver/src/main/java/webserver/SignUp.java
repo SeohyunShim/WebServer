@@ -75,7 +75,7 @@ public class SignUp extends HttpServlet {
 				// 응답을 설정하고 전송합니다.
 		        response.setContentType("text/plain");
 		        response.setCharacterEncoding("UTF-8");
-		        response.getWriter().write("회원가입에 성공했습니다.");
+		        response.getWriter().write("회원 가입을 신청했습니다.");
 				return;
 			} else {
 				// 응답을 설정하고 전송합니다.
@@ -88,7 +88,7 @@ public class SignUp extends HttpServlet {
 			// 응답을 설정하고 전송합니다.
 	        response.setContentType("text/plain");
 	        response.setCharacterEncoding("UTF-8");
-	        response.getWriter().write("회원가입에 실패했습니다.");
+	        response.getWriter().write("회원 가입에 실패했습니다.");
 			return;
 		}
 	}
