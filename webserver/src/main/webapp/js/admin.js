@@ -5,6 +5,7 @@ window.onload = function() {
 
     var listItems = document.querySelectorAll(".list-body li");
 
+	// user 마다 listItem 설정
     listItems.forEach(function(item) {
         var userID = item.id.replace("list-item-", "");
         var currentDate = new Date();
@@ -12,8 +13,68 @@ window.onload = function() {
         var month = currentDate.getMonth() + 1;
 
         updateCalendar(userID, year, month);
+        // 버튼 상태 업데이트 함수 호출
+    	updateButtonStatus(userID, year, month);
+    	
+    	// 버튼 선택
+    	var calendarContainer = document.querySelector("#list-item-" + userID + " .calendar-container");
+		var prevMonthButton = calendarContainer.querySelector(".prevMonthButton");
+		var nextMonthButton = calendarContainer.querySelector(".nextMonthButton");
+    
+    	// 월 변경 시 updateCalendar 함수 호출
+	    prevMonthButton.addEventListener("click", function() {
+	        if (!prevMonthButton.classList.contains("disabled")) {
+	            month--;
+	            if (month < 1) {
+	                month = 12;
+	                year--;
+	            }
+	            updateCalendar(userID, year, month);
+	            // 버튼 상태 업데이트 함수 호출
+	    		updateButtonStatus(userID, year, month);
+	        }
+	    });
+	
+	    nextMonthButton.addEventListener("click", function() {
+	        month++;
+	        if (month > 12) {
+	            month = 1;
+	            year++;
+	        }
+	        updateCalendar(userID, year, month);
+	        // 버튼 상태 업데이트 함수 호출
+	    	updateButtonStatus(userID, year, month);
+	    });	
     });
 };
+
+// 버튼 상태 업데이트 함수
+function updateButtonStatus(userID, year, month) {
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth() + 1;
+    
+    // 버튼 선택
+    var calendarContainer = document.querySelector("#list-item-" + userID + " .calendar-container");
+	var prevMonthButton = calendarContainer.querySelector(".prevMonthButton");
+	var nextMonthButton = calendarContainer.querySelector(".nextMonthButton");
+
+    // 이전 달 버튼 상태 업데이트
+    var monthsDiff = (currentYear - year) * 12 + (currentMonth - month);
+    if (monthsDiff >= 2) {
+        prevMonthButton.disabled = true;
+    } else {
+        prevMonthButton.disabled = false;
+    }
+
+    // 다음 달 버튼 상태 업데이트
+    if (monthsDiff <= 0) {
+        nextMonthButton.disabled = true;
+    } else {
+        nextMonthButton.disabled = false;
+    }
+    
+}
 
 // 날짜를 생성하고 적용하는 함수
 function generateDates() {
@@ -122,6 +183,13 @@ function getUserMonthWork(userID, year, month) {
 
 // 월 변경 시 일자별 근무 정보를 가져와서 달력에 표시하는 함수
 function updateCalendar(userID, year, month) {
+    // <p> 요소를 가져와서 년도와 월을 적용
+    var calendarContainer = document.querySelector("#list-item-" + userID + " .calendar-container");
+	var pElement = calendarContainer.querySelector("p");
+	pElement.innerHTML = ""; // 기존의 날짜 요소를 모두 제거합니다.
+	pElement.textContent = year + ". " + month + ".";
+    
+    
     var datesContainer = document.querySelector("#list-item-" + userID + " .dates");
     datesContainer.innerHTML = ""; // 기존의 날짜 요소를 모두 제거합니다.
 

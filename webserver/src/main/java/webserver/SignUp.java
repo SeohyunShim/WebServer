@@ -56,11 +56,11 @@ public class SignUp extends HttpServlet {
 		user.setUserJob(request.getParameter("up-job"));
 		if (Objects.equals(request.getParameter("admin"), "employer")) {
 			user.setUserAdmin(request.getParameter("admin"));
-			user.setUserPermission("T");
+			user.setUserPermission("F");
 		} else {
 			user.setUserAdmin(request.getParameter("up-admin"));
 			if (Objects.equals(request.getParameter("up-admin"), "employee")) {
-				user.setUserWage(9260);
+				user.setUserWage(9620);
 			} else if (Objects.equals(request.getParameter("up-admin"), "manager")) {
 				user.setUserWage(12500);
 			}

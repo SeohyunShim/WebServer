@@ -188,3 +188,62 @@ header .header-right img {
 .date:nth-child(7n) {
     color: #396ee2;
 }
+
+.nextMonthButton {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.nextMonthButton::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px;
+  border-color: transparent transparent transparent gray;
+  margin-left: 4px;
+}
+.nextMonthButton[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.prevMonthButton {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.prevMonthButton::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px;
+  border-color: transparent transparent transparent gray;
+  transform: rotate(180deg); /* 회전시킵니다 */
+  margin-left: 11px;
+}
+.prevMonthButton[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 400px;
+  margin-right: 400px;
+}
+
+.buttonContainer > p {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}

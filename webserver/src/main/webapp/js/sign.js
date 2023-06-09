@@ -74,8 +74,15 @@ function signIn() {
 
 // 회원가입
 function signUp() {  
-  // 원래 form동작(submit) 중지
   event.preventDefault();
+  
+  // employer 라디오 버튼 선택 시 직급 선택 유효성 검사
+  let adminRadioValue = document.querySelector('input[name="admin"]:checked').value;
+  let adminSelectValue = document.getElementById("up-admin").value;
+  if (adminRadioValue === "employee" && adminSelectValue == "직급") {
+    alert("직급을 선택해 주세요.");
+    return;
+  }
   
   const xhr = new XMLHttpRequest();
   const method = "POST";
@@ -83,7 +90,6 @@ function signUp() {
 
   var form = document.getElementById("signUp"); // JSP의 form 요소 선택
   var formData = new FormData(form); // JSP의 form 데이터를 FormData로 변환
-
   
   // 요청을 초기화합니다.
   xhr.open(method, url);

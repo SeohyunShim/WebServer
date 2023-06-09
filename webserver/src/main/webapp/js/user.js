@@ -7,29 +7,64 @@ window.onload = function() {
     var year = currentDate.getFullYear();
     var month = currentDate.getMonth() + 1;
 
-    updateCalendar(userID, year, month);
-
-/*
+    updateCalendar(userID, year, month);	
+    // 버튼 상태 업데이트 함수 호출
+    updateButtonStatus(year, month);
+    
+	var prevMonthButton = document.querySelector(".prevMonthButton");
+	var nextMonthButton = document.querySelector(".nextMonthButton");
+    
+    
     // 월 변경 시 updateCalendar 함수 호출
-    document.getElementById("prevMonthButton").addEventListener("click", function() {
-        month--;
-        if (month < 1) {
-            month = 12;
-            year--;
+    prevMonthButton.addEventListener("click", function() {
+        if (!prevMonthButton.classList.contains("disabled")) {
+            month--;
+            if (month < 1) {
+                month = 12;
+                year--;
+            }
+            updateCalendar(userID, year, month);
         }
-        updateCalendar(userID, year, month);
+        // 버튼 상태 업데이트 함수 호출
+    	updateButtonStatus(year, month);
     });
 
-    document.getElementById("nextMonthButton").addEventListener("click", function() {
+    nextMonthButton.addEventListener("click", function() {
         month++;
         if (month > 12) {
             month = 1;
             year++;
         }
         updateCalendar(userID, year, month);
-    });
- */
+        // 버튼 상태 업데이트 함수 호출
+    	updateButtonStatus(year, month);
+    });	
 };
+
+// 버튼 상태 업데이트 함수
+function updateButtonStatus(year, month) {
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth() + 1;
+    
+    var prevMonthButton = document.querySelector(".prevMonthButton");
+	var nextMonthButton = document.querySelector(".nextMonthButton");
+
+    // 이전 달 버튼 상태 업데이트
+    var monthsDiff = (currentYear - year) * 12 + (currentMonth - month);
+    if (monthsDiff >= 2) {
+        prevMonthButton.disabled = true;
+    } else {
+        prevMonthButton.disabled = false;
+    }
+
+    // 다음 달 버튼 상태 업데이트
+    if (monthsDiff <= 0) {
+        nextMonthButton.disabled = true;
+    } else {
+        nextMonthButton.disabled = false;
+    }
+}
 
 // 날짜를 생성하고 적용하는 함수
 function generateDates() {
@@ -137,8 +172,28 @@ function getUserMonthWork(userID, year, month) {
 
 // 월 변경 시 일자별 근무 정보를 가져와서 달력에 표시하는 함수
 function updateCalendar(userID, year, month) {
+	var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth() + 1;
+	
     var datesContainer = document.querySelector(".dates");
     datesContainer.innerHTML = ""; // 기존의 날짜 요소를 모두 제거합니다.
+
+	// <p> 요소를 가져와서 년도와 월을 적용
+    var pElement = document.querySelector(".calendar-container p");
+    pElement.innerHTML = "";		// 기존의 년/월 요소를 모두 제거합니다.
+    pElement.textContent = year + ". " + month + ".";
+    
+    // 계산된 월급이 몇 월의 월급인지 표시
+    if(currentYear === year && currentMonth === month){
+		var spElement = document.querySelector(".salary-container p");
+    	spElement.innerHTML = "";		// 기존 문구를 제거합니다.
+    	spElement.textContent = "이번 달 예상 급여";
+	} else{
+		var spElement = document.querySelector(".salary-container p");
+    	spElement.innerHTML = "";		// 기존 문구를 제거합니다.
+    	spElement.textContent = year + " 년 " + month + " 월 급여";
+	}
 
     // 날짜를 생성하여 날짜 컨테이너에 추가
     var firstDate = new Date(year, month - 1, 1);
@@ -207,15 +262,18 @@ function updateCalendar(userID, year, month) {
 // 해당 월의 근무 정보를 기반으로 급여 합계를 계산하는 함수
 function calculateSalary(workData) {
     var totalSalary = 0;
+    var totalWorkTime = 0;
     for (var i = 0; i < workData.length; i++) {
         var work = workData[i];
-        var workTime = Math.floor(work.work_time / 60) * 60; // 30분 단위로 버림(round down) 적용
+        var workTime = Math.floor(work.work_time / 10) * 10; // 10분 단위로 버림(round down) 적용
         var hourlyRate = document.querySelector("#user-wage").value;
-        var workSalary = workTime / 60 * hourlyRate; // 근무 임금 계산
-        totalSalary += workSalary;
+		totalWorkTime += workTime;
     }
+    var workSalary = Math.floor(totalWorkTime / 60) * hourlyRate; // 근무 임금 계산
+    totalSalary = workSalary;
     return totalSalary;
 }
+
 
 function postGoToWork(){
 	const xhr = new XMLHttpRequest();

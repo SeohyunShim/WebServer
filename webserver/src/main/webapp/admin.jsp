@@ -30,6 +30,10 @@ for(User e : users){
 			} else if(Objects.equals(e.getUserPermission(),"F")){  //waitings에 승인되지 않은 회원 추가
 				waitings.add(e);
 			}
+		}else{
+			if(Objects.equals(e.getUserPermission(),"F")){
+				waitings.add(e);
+			}
 		}
 	}
 }
@@ -83,9 +87,11 @@ for(User e : users){
                     	int pay = 0;
                     	int workTimeSum = 0;
                     	for(Work w: works){ 
+                    		// 이번 달 월급만 계산
                     		if(Objects.equals(w.getDate().getYear(), now.getYear()) && Objects.equals(w.getDate().getMonth(), now.getMonth())){
-                        		System.out.println(w.getWork_time());
-                    			workTimeSum += w.getWork_time();
+                    			if(w.getWork_time() != 0){
+                    				workTimeSum += (w.getWork_time() / 10) * 10;
+                    			}
                     		}
                     	}
                     	if(workTimeSum != 0){
@@ -129,7 +135,11 @@ for(User e : users){
                         </div>
                         <div class="list-table">
                             <div class="calendar-container">
-                                <p></p>
+                            	<div class="buttonContainer">
+  									<button class="prevMonthButton"></button>
+  									<p></p>
+  									<button class="nextMonthButton"></button>
+								</div>
                                 <div class="days">
                                     <div class="day">SUN</div>
                                     <div class="day">MON</div>
@@ -237,6 +247,8 @@ for(User e : users){
                 			position = "매니저";
                 		}else if(Objects.equals(w.getUserAdmin(), "employee")){
                 			position = "직원";
+                		}else if(Objects.equals(w.getUserAdmin(), "employer")){
+                			position = "관리자";
                 		}
                 	%>
                     <div class="waiting-item">

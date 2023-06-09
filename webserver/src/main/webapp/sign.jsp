@@ -39,13 +39,17 @@
                         name="up-id"
                         type="text"
                         placeholder="아이디"
+					    pattern=".{6,}"
+					    title="아이디는 6글자 이상이어야 합니다."
                         required
                     />
                     <input
                         id="up-pw"
                         name="up-pw"
                         type="password"
-                        placeholder="비밀번호"
+					    placeholder="비밀번호"
+					    pattern="(?=.*[A-Za-z])(?=.*\d).{8,}"
+					    title="비밀번호는 숫자와 영어를 혼합하여 8글자 이상이어야 합니다."
                         required
                     />
                     <input
@@ -61,6 +65,7 @@
                         type="text"
                         placeholder="전화번호 (010-0000-0000)"
                         pattern="\d{3}-\d{3,4}-\d{4}"
+   						title="전화번호 형식은 010-0000-0000이어야 합니다."
                         required
                     />
                     <input
@@ -96,6 +101,21 @@
                         placeholder="비밀번호"
                         required
                     />
+                    <p id="forgot">
+                        <a
+                            href="./findID.jsp"
+                            onclick="window.open(this.href, 'blank', 'width=600, height=410'); return false;"
+                        >
+                            아이디 찾기
+                        </a>
+                        /
+                        <a
+                            href="./findPW.jsp"
+                            onclick="window.open(this.href, 'blank', 'width=600, height=460'); return false;"
+                        >
+                            비밀번호 찾기
+                        </a>
+                    </p>
                     <button type="submit" name="Signin" id="Signin">
                         로그인
                     </button>

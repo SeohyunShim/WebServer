@@ -60,7 +60,11 @@
                 </div>
 
                 <div class="calendar-container">
-                    <p></p>
+                	<div class="buttonContainer">
+  						<button class="prevMonthButton"></button>
+  						<p></p>
+  						<button class="nextMonthButton"></button>
+					</div>
                     <div class="days">
                         <div class="day">SUN</div>
                         <div class="day">MON</div>
