@@ -237,15 +237,17 @@ function updateCalendar(userID, year, month) {
                     var workDay = workDate.getDate();
 
                     if (day === workDay) {
-                        var startTime = work.start_time.substring(11, 16); // 시간 부분 추출 (HH:mm)
-                        var endTime = work.end_time.substring(11, 16); // 시간 부분 추출 (HH:mm)
-                        var timeRange = startTime + " - " + endTime;
-
-                        var timeElement = document.createElement("div");
-                        timeElement.classList.add("time");
-                        timeElement.textContent = timeRange;
-                        dateElement.appendChild(timeElement);
-                        break;
+						if(work.end_time) {
+	                        var startTime = work.start_time.substring(11, 16); // 시간 부분 추출 (HH:mm)
+	                        var endTime = work.end_time.substring(11, 16); // 시간 부분 추출 (HH:mm)
+	                        var timeRange = startTime + " - " + endTime;
+	
+	                        var timeElement = document.createElement("div");
+	                        timeElement.classList.add("time");
+	                        timeElement.textContent = timeRange;
+	                        dateElement.appendChild(timeElement);
+	                        break;
+						}
                     }
                 }
             }
@@ -261,6 +263,8 @@ function updateCalendar(userID, year, month) {
 
 // 해당 월의 근무 정보를 기반으로 급여 합계를 계산하는 함수
 function calculateSalary(workData) {
+    if(!workData.length) return 0;
+    
     var totalSalary = 0;
     var totalWorkTime = 0;
     for (var i = 0; i < workData.length; i++) {
@@ -329,7 +333,7 @@ function postGetOffWork(){
 		    
 	        // 요청 성공 시 alert 메세지를 표시합니다.
 	        alert('퇴근 처리가 완료되었습니다.')
-
+			location.reload(); // 새로고침
 	    } else {
 	        // 요청이 실패하면 오류 메시지를 표시합니다.
 	        alert('An error occurred: ' + xhr.responseText);

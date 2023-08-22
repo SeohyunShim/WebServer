@@ -9,13 +9,40 @@
 <%@ page import="webserver.Work" %>
 <%@ page import="webserver.WorkDAO" %>
 
+<%
+    HttpSession userSession = request.getSession();
+    String message = (String) userSession.getAttribute("message");
+    User user = (User) userSession.getAttribute("user");
+
+    if (userSession.getAttribute("user") == null) {
+        userSession.setAttribute("message", "로그인이 필요한 서비스입니다.");
+        response.sendRedirect("sign.jsp");
+        return;
+    } else {
+        String userAdmin = user.getUserAdmin();
+        if (userAdmin.equals("employee") || userAdmin.equals("manager")) {
+            userSession.setAttribute("message", "관리자만 접근 가능한 페이지입니다.");
+            response.sendRedirect("user.jsp");
+            return;
+        }
+    }
+
+    if (message != null) {
+        userSession.removeAttribute("message");
+%>
+        <script>
+            alert('<%= message %>');
+        </script>
+<%
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <%
 UserDAO userDao = new UserDAO(); 
 WorkDAO workDao = new WorkDAO();
 DecimalFormat formatter = new DecimalFormat("###,###,###");	//금액 표현 형식
-User user = (User) session.getAttribute("user");
 List<User> users = userDao.getAll();
 List<User> employees = new ArrayList<>(); //승인된 회원
 List<User> waitings = new ArrayList<>();  //아직 승인되지 않은 회원
@@ -23,15 +50,15 @@ List<User> waitings = new ArrayList<>();  //아직 승인되지 않은 회원
 for(User e : users){
 	//관리자와 같은 직장에 다니는 회원 list
 	if(e.getUserJob() == user.getUserJob()){
-		//user가 admin이 아닌 회원 list
-		if(!e.isAdmin()){
-			if(Objects.equals(e.getUserPermission(),"T")){  //employees에 승인된 회원 추가
-				employees.add(e);
-			} else if(Objects.equals(e.getUserPermission(),"F")){  //waitings에 승인되지 않은 회원 추가
+		//user가 admin인 회원 list
+		if(e.isAdmin()){
+			if(!e.isPermit()){
 				waitings.add(e);
 			}
-		}else{
-			if(Objects.equals(e.getUserPermission(),"F")){
+		}else{	//user가 admin이 아닌 회원 list /isPermit() -> employees/ /!isPermit() -> waitings/
+			if(e.isPermit()){  //employees에 승인된 회원 추가
+				employees.add(e);
+			} else if(!e.isPermit()){  //waitings에 승인되지 않은 회원 추가
 				waitings.add(e);
 			}
 		}
@@ -265,7 +292,7 @@ for(User e : users){
                                 </div>
                                 <div class="waiting-subtitle">직급: <%= position %></div>
                                 <div class="waiting-date">
-                                    신청일: 2023-05-20
+                                    신청일: <%= w.getApplyDate() %>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="webserver.User" %>
+<%@ page import="webserver.UserDAO" %>
+
+<%
+    HttpSession userSession = request.getSession();
+    String message = (String) userSession.getAttribute("message");
+    User user = (User) userSession.getAttribute("user");
+
+    if (userSession.getAttribute("user") == null) {
+        userSession.setAttribute("message", "로그인이 필요한 서비스입니다.");
+        response.sendRedirect("sign.jsp");
+        return;
+    } else {
+        String userAdmin = user.getUserAdmin();
+        if (userAdmin.equals("admin")) {
+            userSession.setAttribute("message", "일반 사용자만 접근 가능한 페이지입니다.");
+            response.sendRedirect("admin.jsp");
+            return;
+        }
+    }
+
+    if (message != null) {
+        userSession.removeAttribute("message");
+%>
+        <script>
+            alert('<%= message %>');
+        </script>
+<%
+    }
+%>
     
 <%@ page import="webserver.User" %>
 <%@ page import="javax.servlet.http.HttpSession" %>
@@ -9,7 +39,6 @@
 
 <%-- 세션에서 사용자 정보 가져오기 --%>
 <% HttpSession sessionObj = request.getSession(); %>
-<% User user = (User) sessionObj.getAttribute("user"); %>   
 
 <!DOCTYPE html>
 <html>

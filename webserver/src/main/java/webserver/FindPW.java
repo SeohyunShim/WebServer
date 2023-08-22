@@ -50,7 +50,7 @@ public class FindPW extends HttpServlet {
 
     private String maskPassword(String password) {
         int length = password.length();
-        String masked = password.substring(0, 1) + "*".repeat(length - 2) + password.substring(length - 1);
+        String masked = password.substring(0, 2) + "*".repeat(length - 4) + password.substring(length - 2);
         return masked;
     }
 }

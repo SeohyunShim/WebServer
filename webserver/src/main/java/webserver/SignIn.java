@@ -70,10 +70,16 @@ public class SignIn extends HttpServlet {
 				return;
 	    	}
 	    }
-	    if(user.isAdmin() && Objects.equals(user.getUserPermission(), "F")) {
+	    if(user.isAdmin() && !user.isPermit()) {
 	        response.setContentType("text/plain");
 	        response.setCharacterEncoding("UTF-8");
 	        response.getWriter().write("승인되지 않은 관리자 계정입니다.");
+	    	return;
+	    }
+	    if(!user.isAdmin() && !user.isPermit()) {
+	        response.setContentType("text/plain");
+	        response.setCharacterEncoding("UTF-8");
+	        response.getWriter().write("승인되지 않은 계정입니다.");
 	    	return;
 	    }
 	    

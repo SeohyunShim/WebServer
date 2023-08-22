@@ -1,5 +1,33 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="webserver.User" %>
+<%@ page import="webserver.UserDAO" %>
+
+<%
+    HttpSession userSession = request.getSession();
+	String message = (String) session.getAttribute("message");
+	
+    User user = (User) session.getAttribute("user");
+    if (userSession.getAttribute("user") != null) {
+        userSession.setAttribute("message", "로그인 중인 사용자는 접근 불가능합니다.");
+        String userAdmin = user.getUserAdmin();
+        if (userAdmin.equals("employee") || userAdmin.equals("manager")) {
+            response.sendRedirect("user.jsp");
+        } else if (userAdmin.equals("employer")) {
+            response.sendRedirect("admin.jsp");
+        }
+        return;
+    }
+
+    if (message != null) {
+        session.removeAttribute("message");
+%>
+        <script>
+            alert('<%= message %>');
+        </script>
+<%
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -84,7 +112,7 @@
                     <p id="switchSignIn">이미 아이디가 있으신가요?</p>
                 </form>
             </div>
-            <div class="form-container sign-in-container" required>
+            <div class="form-container sign-in-container">
 				<form id="form" name="form" onsubmit="return signIn()">
                     <h1>로그인</h1>
                     <input

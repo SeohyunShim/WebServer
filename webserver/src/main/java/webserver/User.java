@@ -1,5 +1,7 @@
 package webserver;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
@@ -11,6 +13,7 @@ public class User {
 	private String userJob;
 	private String userAdmin;
 	private String userPermission;
+	private LocalDate applyDate;
 	
 	public boolean isAdmin() {
 	    return Objects.equals(this.getUserAdmin(), "employer");
@@ -67,6 +70,21 @@ public class User {
 	public void setUserPermission(String userPermission) {
 		this.userPermission = userPermission;
 	}
+	
+	public LocalDate getApplyDate() {
+		return applyDate;
+	}
+	public void setDate(LocalDate applyDate) {
+		this.applyDate = applyDate;
+	}
+	public void setApplyDate() {
+		LocalDate d = LocalDate.now();
+		this.applyDate = d;
+	}
+	public void setApplyDate(Date applyDate) {
+		this.applyDate = applyDate.toLocalDate();
+	}
+	
 	
 	public User() {
 		this.userID = null;

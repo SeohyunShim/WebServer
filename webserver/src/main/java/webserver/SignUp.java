@@ -66,6 +66,7 @@ public class SignUp extends HttpServlet {
 			}
 			user.setUserPermission("F");
 		}
+		user.setApplyDate();
 
 		// 문제 없을 시 회원가입 처리 후 alert 팝업 > 페이지 이동
 		if (user.getUserID() != null) {
