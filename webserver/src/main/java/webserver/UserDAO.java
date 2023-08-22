@@ -30,7 +30,7 @@ public class UserDAO {
 	
 	public void insert(User user) {
 		open();
-		String sql="INSERT INTO `user`(ID, PW, NAME, PHONE_NUM, HOURLY_WAGE, JOB, ADMIN, PERMISSION) values(?,?,?,?,?,?,?,?)";
+		String sql="INSERT INTO `user`(ID, PW, NAME, PHONE_NUM, HOURLY_WAGE, JOB, ADMIN, PERMISSION, APPLY_DATE) values(?,?,?,?,?,?,?,?,?)";
 	
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -42,6 +42,8 @@ public class UserDAO {
 			pstmt.setString(6, user.getUserJob());
 			pstmt.setString(7, user.getUserAdmin());
 			pstmt.setString(8, user.getUserPermission());
+			Date applyDate = Date.valueOf(user.getApplyDate());
+			pstmt.setDate(9, applyDate);
 			
 			pstmt.executeUpdate();
 		}catch(Exception e) {
@@ -108,6 +110,9 @@ public class UserDAO {
 				user.setUserJob(rs.getString("JOB"));
 				user.setUserAdmin(rs.getString("ADMIN"));
 				user.setUserPermission(rs.getString("PERMISSION"));
+				if(rs.getDate("APPLY_DATE") != null) {
+					user.setApplyDate(rs.getDate("APPLY_DATE"));
+				}
 				
 				users.add(user);
 			}
@@ -138,6 +143,9 @@ public class UserDAO {
 				u.setUserJob(rs.getString("JOB"));
 				u.setUserAdmin(rs.getString("ADMIN"));
 				u.setUserPermission(rs.getString("PERMISSION"));
+				if(rs.getDate("APPLY_DATE") != null) {
+					u.setApplyDate(rs.getDate("APPLY_DATE"));
+				}
 				
 				user=u;
 				}

@@ -1,0 +1,36 @@
+body {
+    width: unset;
+    background-color: white;
+    padding: 60px 40px;
+}
+
+h1 {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+h3 {
+}
+
+form {
+    width: 100%;
+    margin-top: 50px;
+    text-align: center;
+}
+form input {
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 5px;
+    margin-bottom: 10px;
+}
+form button {
+    margin-top: 20px;
+    padding: 15px 45px;
+    background-color: #3e4fba;
+    color: #ffffff;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: transform 80ms ease-in;
+}
+form button:active {
+    transform: scale(0.95);
+}

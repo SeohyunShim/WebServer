@@ -56,16 +56,17 @@ public class SignUp extends HttpServlet {
 		user.setUserJob(request.getParameter("up-job"));
 		if (Objects.equals(request.getParameter("admin"), "employer")) {
 			user.setUserAdmin(request.getParameter("admin"));
-			user.setUserPermission("T");
+			user.setUserPermission("F");
 		} else {
 			user.setUserAdmin(request.getParameter("up-admin"));
 			if (Objects.equals(request.getParameter("up-admin"), "employee")) {
-				user.setUserWage(9260);
+				user.setUserWage(9620);
 			} else if (Objects.equals(request.getParameter("up-admin"), "manager")) {
 				user.setUserWage(12500);
 			}
 			user.setUserPermission("F");
 		}
+		user.setApplyDate();
 
 		// 문제 없을 시 회원가입 처리 후 alert 팝업 > 페이지 이동
 		if (user.getUserID() != null) {
@@ -75,7 +76,7 @@ public class SignUp extends HttpServlet {
 				// 응답을 설정하고 전송합니다.
 		        response.setContentType("text/plain");
 		        response.setCharacterEncoding("UTF-8");
-		        response.getWriter().write("회원가입에 성공했습니다.");
+		        response.getWriter().write("회원 가입을 신청했습니다.");
 				return;
 			} else {
 				// 응답을 설정하고 전송합니다.
@@ -88,7 +89,7 @@ public class SignUp extends HttpServlet {
 			// 응답을 설정하고 전송합니다.
 	        response.setContentType("text/plain");
 	        response.setCharacterEncoding("UTF-8");
-	        response.getWriter().write("회원가입에 실패했습니다.");
+	        response.getWriter().write("회원 가입에 실패했습니다.");
 			return;
 		}
 	}

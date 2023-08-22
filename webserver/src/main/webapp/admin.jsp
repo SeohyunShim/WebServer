@@ -3,10 +3,39 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.*"%>
 <%@ page import="java.text.*" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ page import="webserver.User" %>
 <%@ page import="webserver.UserDAO" %>
 <%@ page import="webserver.Work" %>
 <%@ page import="webserver.WorkDAO" %>
+
+<%
+    HttpSession userSession = request.getSession();
+    String message = (String) userSession.getAttribute("message");
+    User user = (User) userSession.getAttribute("user");
+
+    if (userSession.getAttribute("user") == null) {
+        userSession.setAttribute("message", "로그인이 필요한 서비스입니다.");
+        response.sendRedirect("sign.jsp");
+        return;
+    } else {
+        String userAdmin = user.getUserAdmin();
+        if (userAdmin.equals("employee") || userAdmin.equals("manager")) {
+            userSession.setAttribute("message", "관리자만 접근 가능한 페이지입니다.");
+            response.sendRedirect("user.jsp");
+            return;
+        }
+    }
+
+    if (message != null) {
+        userSession.removeAttribute("message");
+%>
+        <script>
+            alert('<%= message %>');
+        </script>
+<%
+    }
+%>
 
 <!DOCTYPE html>
 <html>
@@ -14,7 +43,6 @@
 UserDAO userDao = new UserDAO(); 
 WorkDAO workDao = new WorkDAO();
 DecimalFormat formatter = new DecimalFormat("###,###,###");	//금액 표현 형식
-User user = (User) session.getAttribute("user");
 List<User> users = userDao.getAll();
 List<User> employees = new ArrayList<>(); //승인된 회원
 List<User> waitings = new ArrayList<>();  //아직 승인되지 않은 회원
@@ -22,11 +50,15 @@ List<User> waitings = new ArrayList<>();  //아직 승인되지 않은 회원
 for(User e : users){
 	//관리자와 같은 직장에 다니는 회원 list
 	if(e.getUserJob() == user.getUserJob()){
-		//user가 admin이 아닌 회원 list
-		if(!e.isAdmin()){
-			if(Objects.equals(e.getUserPermission(),"T")){  //employees에 승인된 회원 추가
+		//user가 admin인 회원 list
+		if(e.isAdmin()){
+			if(!e.isPermit()){
+				waitings.add(e);
+			}
+		}else{	//user가 admin이 아닌 회원 list /isPermit() -> employees/ /!isPermit() -> waitings/
+			if(e.isPermit()){  //employees에 승인된 회원 추가
 				employees.add(e);
-			} else if(Objects.equals(e.getUserPermission(),"F")){  //waitings에 승인되지 않은 회원 추가
+			} else if(!e.isPermit()){  //waitings에 승인되지 않은 회원 추가
 				waitings.add(e);
 			}
 		}
@@ -78,16 +110,22 @@ for(User e : users){
                     for(User e: employees){
                     	List<Work> works = workDao.getUserWork(e.getUserID());
                     	//이번달에 일한만큼 월급 계산
+                    	LocalDate now = LocalDate.now();
                     	int pay = 0;
                     	int workTimeSum = 0;
-                    	for(Work w: works){
-                    		workTimeSum += w.getWork_time();
+                    	for(Work w: works){ 
+                    		// 이번 달 월급만 계산
+                    		if(Objects.equals(w.getDate().getYear(), now.getYear()) && Objects.equals(w.getDate().getMonth(), now.getMonth())){
+                    			if(w.getWork_time() != 0){
+                    				workTimeSum += (w.getWork_time() / 10) * 10;
+                    			}
+                    		}
                     	}
                     	if(workTimeSum != 0){
-                    		pay = workTimeSum/60*e.getUserWage();
+                    		pay = workTimeSum/60 * e.getUserWage();
                     	}
                     %>
-                    <li>
+                    <li id="list-item-<%= e.getUserID() %>">
                         <div class="list-info">
                             <div>
                                 <img
@@ -98,7 +136,7 @@ for(User e : users){
                             </div>
                             <div><%= e.getUserName() %></div>
                             <div><%= e.getUserPhone() %></div>
-                            <div><span><%= e.getUserWage() %></span>원</div>
+                            <div><span><%= formatter.format(e.getUserWage()) %></span>원</div>
                             <div><span><%= formatter.format(pay) %></span>원</div>
                             <div><button class="view-button">VIEW</button></div>
                             <div>
@@ -124,7 +162,11 @@ for(User e : users){
                         </div>
                         <div class="list-table">
                             <div class="calendar-container">
-                                <p>2023. 5.</p>
+                            	<div class="buttonContainer">
+  									<button class="prevMonthButton"></button>
+  									<p></p>
+  									<button class="nextMonthButton"></button>
+								</div>
                                 <div class="days">
                                     <div class="day">SUN</div>
                                     <div class="day">MON</div>
@@ -135,37 +177,6 @@ for(User e : users){
                                     <div class="day">SAT</div>
                                 </div>
                                 <div class="dates">
-                                    <div class="date">
-                                        1
-                                        <!--  <div class="time">09:00 - 14:00</div> -->
-                                    </div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
-                                    <div class="date">2</div>
                                 </div>
                             </div>
                         </div>
@@ -263,6 +274,8 @@ for(User e : users){
                 			position = "매니저";
                 		}else if(Objects.equals(w.getUserAdmin(), "employee")){
                 			position = "직원";
+                		}else if(Objects.equals(w.getUserAdmin(), "employer")){
+                			position = "관리자";
                 		}
                 	%>
                     <div class="waiting-item">
@@ -279,7 +292,7 @@ for(User e : users){
                                 </div>
                                 <div class="waiting-subtitle">직급: <%= position %></div>
                                 <div class="waiting-date">
-                                    신청일: 2023-05-20
+                                    신청일: <%= w.getApplyDate() %>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,33 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="webserver.User" %>
+<%@ page import="webserver.UserDAO" %>
+
+<%
+    HttpSession userSession = request.getSession();
+	String message = (String) session.getAttribute("message");
+	
+    User user = (User) session.getAttribute("user");
+    if (userSession.getAttribute("user") != null) {
+        userSession.setAttribute("message", "로그인 중인 사용자는 접근 불가능합니다.");
+        String userAdmin = user.getUserAdmin();
+        if (userAdmin.equals("employee") || userAdmin.equals("manager")) {
+            response.sendRedirect("user.jsp");
+        } else if (userAdmin.equals("employer")) {
+            response.sendRedirect("admin.jsp");
+        }
+        return;
+    }
+
+    if (message != null) {
+        session.removeAttribute("message");
+%>
+        <script>
+            alert('<%= message %>');
+        </script>
+<%
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,13 +67,17 @@
                         name="up-id"
                         type="text"
                         placeholder="아이디"
+					    pattern=".{6,}"
+					    title="아이디는 6글자 이상이어야 합니다."
                         required
                     />
                     <input
                         id="up-pw"
                         name="up-pw"
                         type="password"
-                        placeholder="비밀번호"
+					    placeholder="비밀번호"
+					    pattern="(?=.*[A-Za-z])(?=.*\d).{8,}"
+					    title="비밀번호는 숫자와 영어를 혼합하여 8글자 이상이어야 합니다."
                         required
                     />
                     <input
@@ -61,6 +93,7 @@
                         type="text"
                         placeholder="전화번호 (010-0000-0000)"
                         pattern="\d{3}-\d{3,4}-\d{4}"
+   						title="전화번호 형식은 010-0000-0000이어야 합니다."
                         required
                     />
                     <input
@@ -79,7 +112,7 @@
                     <p id="switchSignIn">이미 아이디가 있으신가요?</p>
                 </form>
             </div>
-            <div class="form-container sign-in-container" required>
+            <div class="form-container sign-in-container">
 				<form id="form" name="form" onsubmit="return signIn()">
                     <h1>로그인</h1>
                     <input
@@ -96,6 +129,21 @@
                         placeholder="비밀번호"
                         required
                     />
+                    <p id="forgot">
+                        <a
+                            href="./findID.jsp"
+                            onclick="window.open(this.href, 'blank', 'width=600, height=410'); return false;"
+                        >
+                            아이디 찾기
+                        </a>
+                        /
+                        <a
+                            href="./findPW.jsp"
+                            onclick="window.open(this.href, 'blank', 'width=600, height=460'); return false;"
+                        >
+                            비밀번호 찾기
+                        </a>
+                    </p>
                     <button type="submit" name="Signin" id="Signin">
                         로그인
                     </button>

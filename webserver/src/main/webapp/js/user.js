@@ -1,7 +1,70 @@
-window.onload = function () {
-    // generateDates 함수를 호출하여 날짜를 생성하고 적용
+window.onload = function() {
     generateDates();
+    getTodayWork();
+
+    var userID = document.querySelector("#user-id").value;
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth() + 1;
+
+    updateCalendar(userID, year, month);	
+    // 버튼 상태 업데이트 함수 호출
+    updateButtonStatus(year, month);
+    
+	var prevMonthButton = document.querySelector(".prevMonthButton");
+	var nextMonthButton = document.querySelector(".nextMonthButton");
+    
+    
+    // 월 변경 시 updateCalendar 함수 호출
+    prevMonthButton.addEventListener("click", function() {
+        if (!prevMonthButton.classList.contains("disabled")) {
+            month--;
+            if (month < 1) {
+                month = 12;
+                year--;
+            }
+            updateCalendar(userID, year, month);
+        }
+        // 버튼 상태 업데이트 함수 호출
+    	updateButtonStatus(year, month);
+    });
+
+    nextMonthButton.addEventListener("click", function() {
+        month++;
+        if (month > 12) {
+            month = 1;
+            year++;
+        }
+        updateCalendar(userID, year, month);
+        // 버튼 상태 업데이트 함수 호출
+    	updateButtonStatus(year, month);
+    });	
 };
+
+// 버튼 상태 업데이트 함수
+function updateButtonStatus(year, month) {
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth() + 1;
+    
+    var prevMonthButton = document.querySelector(".prevMonthButton");
+	var nextMonthButton = document.querySelector(".nextMonthButton");
+
+    // 이전 달 버튼 상태 업데이트
+    var monthsDiff = (currentYear - year) * 12 + (currentMonth - month);
+    if (monthsDiff >= 2) {
+        prevMonthButton.disabled = true;
+    } else {
+        prevMonthButton.disabled = false;
+    }
+
+    // 다음 달 버튼 상태 업데이트
+    if (monthsDiff <= 0) {
+        nextMonthButton.disabled = true;
+    } else {
+        nextMonthButton.disabled = false;
+    }
+}
 
 // 날짜를 생성하고 적용하는 함수
 function generateDates() {
@@ -75,10 +138,146 @@ function generateDates() {
     for (var i = 1; i <= 7 - nextMonthFirstDayOfWeek; i++) {
         var dateElement = document.createElement("div");
         dateElement.classList.add("date", "next");
-        dateElement.textContent = i;
         datesContainer.appendChild(dateElement);
     }
 }
+
+function getUserMonthWork(userID, year, month) {
+    return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        var method = "GET";
+        var url = "./getUserMonthWork?userID=" + userID + "&year=" + year + "&month=" + month;
+
+        xhr.open(method, url);
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var workData = JSON.parse(xhr.responseText);
+                resolve(workData);
+            } else {
+                reject(xhr.responseText);
+            }
+        };
+
+        xhr.onerror = function() {
+            reject("요청 중 오류가 발생했습니다.");
+        };
+
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Accept", "application/json");
+
+        xhr.send();
+    });
+}
+
+// 월 변경 시 일자별 근무 정보를 가져와서 달력에 표시하는 함수
+function updateCalendar(userID, year, month) {
+	var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth() + 1;
+	
+    var datesContainer = document.querySelector(".dates");
+    datesContainer.innerHTML = ""; // 기존의 날짜 요소를 모두 제거합니다.
+
+	// <p> 요소를 가져와서 년도와 월을 적용
+    var pElement = document.querySelector(".calendar-container p");
+    pElement.innerHTML = "";		// 기존의 년/월 요소를 모두 제거합니다.
+    pElement.textContent = year + ". " + month + ".";
+    
+    // 계산된 월급이 몇 월의 월급인지 표시
+    if(currentYear === year && currentMonth === month){
+		var spElement = document.querySelector(".salary-container p");
+    	spElement.innerHTML = "";		// 기존 문구를 제거합니다.
+    	spElement.textContent = "이번 달 예상 급여";
+	} else{
+		var spElement = document.querySelector(".salary-container p");
+    	spElement.innerHTML = "";		// 기존 문구를 제거합니다.
+    	spElement.textContent = year + " 년 " + month + " 월 급여";
+	}
+
+    // 날짜를 생성하여 날짜 컨테이너에 추가
+    var firstDate = new Date(year, month - 1, 1);
+    var firstDayOfWeek = firstDate.getDay();
+    var currentMonthLastDate = new Date(year, month, 0).getDate();
+
+    for (var i = 0; i < firstDayOfWeek; i++) {
+        var dateElement = document.createElement("div");
+        dateElement.classList.add("date", "prev");
+        datesContainer.appendChild(dateElement);
+    }
+
+    for (var i = 1; i <= currentMonthLastDate; i++) {
+        var dateElement = document.createElement("div");
+        dateElement.classList.add("date");
+        dateElement.textContent = i;
+        datesContainer.appendChild(dateElement);
+    }
+
+    var lastDate = new Date(year, month - 1, currentMonthLastDate);
+    var lastDayOfWeek = lastDate.getDay();
+    var remainingDays = 7 - lastDayOfWeek - 1;
+
+    for (var i = 1; i <= remainingDays; i++) {
+        var dateElement = document.createElement("div");
+        dateElement.classList.add("date", "next");
+        datesContainer.appendChild(dateElement);
+    }
+
+    // 해당 월의 근무 정보를 가져와서 달력에 표시합니다.
+    getUserMonthWork(userID, year, month)
+        .then(function(workData) {
+            var dateElements = datesContainer.querySelectorAll(".date");
+            for (var i = 0; i < dateElements.length; i++) {
+                var dateElement = dateElements[i];
+                var day = parseInt(dateElement.textContent);
+
+                for (var j = 0; j < workData.length; j++) {
+                    var work = workData[j];
+                    var workDate = new Date(work.date);
+                    var workDay = workDate.getDate();
+
+                    if (day === workDay) {
+						if(work.end_time) {
+	                        var startTime = work.start_time.substring(11, 16); // 시간 부분 추출 (HH:mm)
+	                        var endTime = work.end_time.substring(11, 16); // 시간 부분 추출 (HH:mm)
+	                        var timeRange = startTime + " - " + endTime;
+	
+	                        var timeElement = document.createElement("div");
+	                        timeElement.classList.add("time");
+	                        timeElement.textContent = timeRange;
+	                        dateElement.appendChild(timeElement);
+	                        break;
+						}
+                    }
+                }
+            }
+
+            // 해당 월의 급여 합계를 계산하여 #salaryAmount에 적용합니다.
+            var salaryAmount = calculateSalary(workData);
+            document.querySelector("#salaryAmount").textContent = salaryAmount.toLocaleString() + "원";
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+}
+
+// 해당 월의 근무 정보를 기반으로 급여 합계를 계산하는 함수
+function calculateSalary(workData) {
+    if(!workData.length) return 0;
+    
+    var totalSalary = 0;
+    var totalWorkTime = 0;
+    for (var i = 0; i < workData.length; i++) {
+        var work = workData[i];
+        var workTime = Math.floor(work.work_time / 10) * 10; // 10분 단위로 버림(round down) 적용
+        var hourlyRate = document.querySelector("#user-wage").value;
+		totalWorkTime += workTime;
+    }
+    var workSalary = Math.floor(totalWorkTime / 60) * hourlyRate; // 근무 임금 계산
+    totalSalary = workSalary;
+    return totalSalary;
+}
+
 
 function postGoToWork(){
 	const xhr = new XMLHttpRequest();
@@ -134,7 +333,7 @@ function postGetOffWork(){
 		    
 	        // 요청 성공 시 alert 메세지를 표시합니다.
 	        alert('퇴근 처리가 완료되었습니다.')
-
+			location.reload(); // 새로고침
 	    } else {
 	        // 요청이 실패하면 오류 메시지를 표시합니다.
 	        alert('An error occurred: ' + xhr.responseText);
@@ -145,43 +344,57 @@ function postGetOffWork(){
 	xhr.send();
 }
 
-function postGetWork() {
-	// user.jsp 내에서 작업 기록을 가져오는 AJAX 요청
-	const xhr = new XMLHttpRequest();
-	const method = "GET";
-	const url = "./getWork";
-	
-	// 요청을 초기화합니다.
-	xhr.open(method, url);
-	
-	xhr.onload = function() {
-	    if (xhr.status === 200) {
-	        // 요청이 성공하면 가져온 작업 기록을 처리하여 화면에 반영합니다.
-	        const workData = JSON.parse(xhr.responseText);
-	        // 작업 기록을 활용하여 화면을 업데이트하는 로직을 작성합니다.
-			console.log(workData)
-	        updateWorkUI(workData);
-	    } else {
-	        // 요청이 실패하면 오류 메시지를 표시합니다.
-	        console.error('An error occurred: ' + xhr.responseText);
-	    }
-	};
-	
-	// 서버에 요청을 보냅니다.
-	xhr.send();
+// 날짜와 시간 형식을 변경하는 함수
+function formatDate(dateTime) {
+    const date = new Date(dateTime);
+    const hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    const formattedHours = (hours % 12 === 0) ? 12 : hours % 12;
+    const period = (hours >= 12) ? '오후' : '오전';
+
+    const formattedDate = `${period} ${formattedHours}:${minutes}:${seconds}`;
+    return formattedDate;
 }
 
-function updateWorkUI(workData) {
-	console.log(workData)
-    // 작업 기록을 활용하여 화면을 업데이트하는 로직을 작성합니다.
-    // 예시: 작업 기록을 토대로 버튼을 표시하거나 감춥니다.
-    if (workData.length > 0) {
-        // 작업 기록이 있을 경우, 출근 버튼을 감추고 퇴근 버튼을 표시합니다.
-        document.getElementById("goToWorkButton").style.display = "none";
-        document.getElementById("getOffWorkButton").style.display = "block";
-    } else {
-        // 작업 기록이 없을 경우, 출근 버튼을 표시하고 퇴근 버튼을 감춥니다.
-        document.getElementById("goToWorkButton").style.display = "block";
-        document.getElementById("getOffWorkButton").style.display = "none";
-    }
+// getWork 요청을 보내고, 응답을 받아서 UI 업데이트 함수를 호출
+function getTodayWork() {
+    const xhr = new XMLHttpRequest();
+    const method = "GET";
+    const url = "./getTodayWork";
+
+    xhr.open(method, url);
+
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            const workData = JSON.parse(xhr.responseText);
+            const goToWorkButton = document.getElementById("goToWorkButton");
+            const getOffWorkButton = document.getElementById("getOffWorkButton");
+            const goToWorkTimeElem = document.getElementById("goToWorkTime");
+            const getOffWorkTimeElem = document.getElementById("getOffWorkTime");
+
+            if (workData.goToWorkTime !== undefined) {
+                goToWorkButton.style.display = "none";
+                goToWorkTimeElem.style.display = "block";
+                goToWorkTimeElem.textContent = formatDate(workData.goToWorkTime);
+            } else {
+                goToWorkButton.style.display = "block";
+                goToWorkTimeElem.style.display = "none";
+            }
+
+            if (workData.getOffWorkTime !== undefined) {
+                getOffWorkButton.style.display = "none";
+                getOffWorkTimeElem.style.display = "block";
+                getOffWorkTimeElem.textContent = formatDate(workData.getOffWorkTime);
+            } else {
+                getOffWorkButton.style.display = "block";
+                getOffWorkTimeElem.style.display = "none";
+            }
+        } else {
+            console.error('An error occurred: ' + xhr.responseText);
+        }
+    };
+
+    xhr.send();
 }
